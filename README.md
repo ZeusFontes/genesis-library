@@ -5,7 +5,7 @@ Catálogo inteligente de filmes, séries e livros para mobile. Otimiza a descobe
 
 - Brenno
 - Daniel Costa Carvalho Martins | RGM: 37196201
-- Gabriel Ho
+- Gabriel Pereira Ho
 - Zeus Fontes Barbosa
 
 ## Tecnologias
