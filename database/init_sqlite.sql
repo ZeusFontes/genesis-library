@@ -17,8 +17,6 @@ CREATE TABLE profiles (
     user_id INTEGER NOT NULL,
     name TEXT NOT NULL,
     avatar_url TEXT,
-    is_kids INTEGER NOT NULL DEFAULT 0 CHECK (is_kids IN (0, 1)),
-    pin_hash TEXT,
     created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );

@@ -33,8 +33,6 @@ Foram adicionados os scripts iniciais para a base do sistema de streaming mobile
   - `user_id` (referência para `users.id`)
   - `name`
   - `avatar_url`
-  - `is_kids` (0 = adulto, 1 = perfil kids — restringe conteúdo adulto)
-  - `pin_hash` (opcional — PIN de acesso ao perfil, armazenado como hash)
   - `created_at`
 
 - `favorites`
@@ -49,8 +47,6 @@ Foram adicionados os scripts iniciais para a base do sistema de streaming mobile
 - O login utiliza apenas `email` e `senha` (armazenada como hash).
 - O nome de usuário é armazenado no cadastro.
 - Cada conta (`user`) pode ter múltiplos perfis, semelhante ao modelo Netflix.
-- Perfis kids (`is_kids = 1`) devem ter conteúdo adulto filtrado na camada de aplicação.
-- O PIN do perfil é opcional e armazenado como hash — útil para restringir acesso a perfis específicos.
 - Os favoritos são vinculados ao **perfil**, não à conta, permitindo listas independentes por perfil.
 
 Esses arquivos são o ponto inicial para a camada local do app em SQLite.

@@ -7,10 +7,10 @@ INSERT INTO users (id, username, email, password_hash) VALUES
 
 -- Ana tem dois perfis: um adulto e um kids
 -- Bruno tem um perfil principal com PIN
-INSERT INTO profiles (id, user_id, name, avatar_url, is_kids, pin_hash) VALUES
-    (1, 1, 'Ana',     'avatars/ana.png',    0, NULL),
-    (2, 1, 'Crianças','avatars/kids.png',   1, NULL),
-    (3, 2, 'Bruno',   'avatars/bruno.png',  0, '$2a$12$XkP3mQ9rT1vW7nZ4jL8uYu5bH2cF0eA6dI9sO3wE7gN1qR4yM5t');
+INSERT INTO profiles (id, user_id, name, avatar_url) VALUES
+    (1, 1, 'Ana',      'avatars/ana.png'),
+    (2, 1, 'Crianças', 'avatars/kids.png'),
+    (3, 2, 'Bruno',    'avatars/bruno.png');
 
 INSERT INTO favorites (id, profile_id, movie_id, movie_title) VALUES
     (1, 1, 'mv_001', 'Inception'),
