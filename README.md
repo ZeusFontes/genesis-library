@@ -1,7 +1,6 @@
-```md
 # GÊNESIS
 
-> Catálogo inteligente de filmes, séries e livros para mobile. Otimiza a descoberta de conteúdo com redirecionamento para streamings oficiais e player integrado para obras de domínio público.
+> Catálogo inteligente de filmes, séries e livros para mobile. Otimiza a descoberta de conteúdo com redirecionamento para streamings oficiais e player integrado para obras de domínio público. Desenvolvido com foco em UX e alta performance.
 
 ![Flutter](https://img.shields.io/badge/Flutter-3.0%2B-02569B?style=flat&logo=flutter)
 ![Dart](https://img.shields.io/badge/Dart-3.0%2B-0175C2?style=flat&logo=dart)
@@ -15,16 +14,15 @@
 - [Sobre](#sobre)
 - [Equipe](#equipe)
 - [Tecnologias](#tecnologias)
-- [Estrutura do repositório](#estrutura-do-repositório)
-- [Frontend](#frontend)
-- [Banco de dados](#banco-de-dados)
-- [Contribuindo](#contribuindo)
+- [Estrutura do Repositório](#estrutura-do-repositório)
+- [Frontend (Flutter)](#frontend-flutter)
+- [Banco de Dados (SQLite)](#banco-de-dados-sqlite)
 
 ---
 
 ## Sobre
 
-O GÊNESIS é uma plataforma mobile que centraliza a descoberta de filmes, séries e livros. Obras de domínio público são reproduzidas diretamente no app via player integrado; conteúdos modernos redirecionam o usuário para a plataforma de streaming onde estão disponíveis.
+O GÊNESIS é uma plataforma mobile que centraliza a descoberta de filmes, séries e livros. Obras de domínio público são reproduzidas diretamente no aplicativo via player integrado; conteúdos modernos redirecionam o usuário para a plataforma de streaming onde estão disponíveis.
 
 ---
 
@@ -48,220 +46,155 @@ O GÊNESIS é uma plataforma mobile que centraliza a descoberta de filmes, séri
 
 ---
 
-## Estrutura do repositório
+## Estrutura do Repositório
 
-```
+```text
 genesis-library/
 ├── frontend/        → Aplicativo Flutter (mobile Android)
 └── database/        → Scripts SQL do banco de dados local
+
 ```
 
 ---
 
-## Frontend
+## Frontend (Flutter)
 
 ### Pré-requisitos
 
-| Ferramenta | Versão mínima | |
-|---|---|---|
+| Ferramenta | Versão mínima | Link |
+| --- | --- | --- |
 | Flutter SDK | `>= 3.0.0` | [Instalação](https://docs.flutter.dev/get-started/install) |
 | Dart SDK | `>= 3.0.0` | Incluso no Flutter |
-| Android Studio ou VS Code | — | Com extensão Flutter instalada |
-| Dispositivo ou emulador Android | API 21+ | — |
+| Android Studio / VS Code | — | Com extensão Flutter instalada |
+| Dispositivo ou emulador | API 21+ | Android |
 
-Antes de continuar, verifique se o ambiente está configurado corretamente:
+### Instalação e Execução
 
-```bash
-flutter doctor
-```
-
-### Instalação
+Antes de iniciar, certifique-se de que o ambiente está configurado executando `flutter doctor`.
 
 ```bash
-# Clone o repositório
-git clone https://github.com/ZeusFontes/genesis-library.git
-cd genesis-library
+# Acesse o diretório do frontend
+cd genesis-library/frontend
 
-# Acesse a branch do frontend
-git checkout front
-
-# Entre na pasta
-cd frontend
-
-# Instale as dependências
+# Instale as dependências do projeto
 flutter pub get
-```
 
-### Execução
-
-```bash
-# Listar dispositivos disponíveis
+# Liste os dispositivos disponíveis
 flutter devices
 
-# Rodar em modo debug
+# Execute a aplicação em modo debug
 flutter run
 
-# Rodar em dispositivo específico
-flutter run -d <device_id>
-
-# Rodar em modo release
-flutter run --release
 ```
 
-### Build
+### Comandos de Build
 
 ```bash
-# APK debug
+# Gerar APK em modo debug
 flutter build apk --debug
 
-# APK release
+# Gerar APK em modo release
 flutter build apk --release
-```
-
-O APK gerado fica em:
 
 ```
-build/app/outputs/flutter-apk/app-release.apk
-```
 
-### Estrutura
+O arquivo APK gerado será alocado no diretório: `build/app/outputs/flutter-apk/app-release.apk`.
 
-```
-frontend/
-├── assets/
-│   └── logo/
-├── lib/
-│   ├── main.dart                        → Entrada do app e registro de rotas
-│   ├── core/
-│   │   ├── constants/                   → AppColors, AppRoutes, AppAssets
-│   │   └── theme/                       → ThemeData escuro customizado
-│   ├── models/                          → MediaContent, Profile, Addon, CastMember
-│   ├── mocks/                           → Dados fictícios para desenvolvimento
-│   ├── navigation/                      → BottomNavigationBar principal
-│   ├── screens/
-│   │   ├── auth/                        → Login, Cadastro, Esqueci senha
-│   │   ├── profiles/                    → Seleção de perfil
-│   │   ├── home/                        → Filmes, Séries, Livros
-│   │   ├── busca/                       → Busca global
-│   │   ├── details/                     → Detalhe de filme e livro
-│   │   ├── downloads/                   → Conteúdos baixados
-│   │   ├── historico/                   → Histórico de visualização
-│   │   ├── notificacoes/                → Notificações
-│   │   ├── addons/                      → Extensões do app
-│   │   ├── profile/                     → Perfil do usuário
-│   │   └── configuracoes/               → Configurações e subpáginas
-│   └── widgets/                         → Componentes reutilizáveis
-└── pubspec.yaml
-```
+### Dependências Principais
 
-### Dependências
+| Pacote | Versão | Aplicação |
+| --- | --- | --- |
+| `go_router` | ^16.0.0 | Navegação declarativa |
+| `flutter_riverpod` | ^3.0.0 | Gerenciamento de estado |
+| `cached_network_image` | ^3.4.1 | Armazenamento de imagens em cache |
+| `carousel_slider` | ^5.0.0 | Implementação de hero banner rotativo |
+| `google_fonts` | ^6.2.1 | Tipografia da interface |
+| `flutter_animate` | ^4.5.0 | Transições e animações |
+| `video_player` | ^2.10.0 | Player de vídeo integrado |
+| `url_launcher` | ^6.3.1 | Redirecionamento para links externos |
+| `shimmer` | ^3.0.0 | Efeito visual de carregamento (skeleton) |
 
-| Pacote | Versão | Uso |
-|---|---|---|
-| `go_router` | `^16.0.0` | Navegação declarativa |
-| `flutter_riverpod` | `^3.0.0` | Gerenciamento de estado |
-| `cached_network_image` | `^3.4.1` | Imagens com cache |
-| `carousel_slider` | `^5.0.0` | Hero banner rotativo |
-| `google_fonts` | `^6.2.1` | Tipografia |
-| `flutter_animate` | `^4.5.0` | Animações |
-| `video_player` | `^2.10.0` | Player de vídeo |
-| `url_launcher` | `^6.3.1` | Links de streaming externo |
-| `shimmer` | `^3.0.0` | Loading skeleton |
+### Paleta de Cores (Design System)
 
-### Paleta de cores
+| Token | Hex | Aplicação |
+| --- | --- | --- |
+| `background` | `#000000` | Fundo principal da aplicação |
+| `surface` | `#121212` | Barra de navegação inferior e superfícies com elevação |
+| `secondary` | `#333333` | Botões de filtro e elementos estruturais secundários |
+| `softAccent` | `#B3B3B3` | Tipografia inativa, bordas e ícones não selecionados |
+| `primaryAccent` | `#D9AD00` | Botões de ação principal (CTA) e elementos ativos |
+| `white` | `#FFFFFF` | Tipografia de destaque |
+| `grey` | `#808080` | Tipografia de descrição e subtítulos |
 
-| Token | Hex | Uso |
-|---|---|---|
-| `background` | `#000000` | Fundo principal |
-| `surface` | `#121212` | Bottom nav e superfícies elevadas |
-| `secondary` | `#333333` | Botões de filtro e elementos secundários |
-| `softAccent` | `#B3B3B3` | Textos inativos, bordas, ícones não selecionados |
-| `primaryAccent` | `#D9AD00` | Botões principais e seleções ativas |
-| `white` | `#FFFFFF` | Textos principais |
-| `grey` | `#808080` | Textos descritivos |
+### Solução de Problemas Comuns
 
-### Solução de problemas
-
-**Erros de "Target of URI doesn't exist" no VS Code**
-O VS Code está abrindo a pasta errada. Abra especificamente a pasta `frontend/`, que contém o `pubspec.yaml`.
-
-**Emulador não aparece em `flutter devices`**
-Abra o Android Studio → Device Manager e inicie um emulador, ou conecte um dispositivo físico com depuração USB ativada.
-
-**Build falha com erro do Gradle**
-```bash
-cd android && ./gradlew clean && cd .. && flutter run
-```
+* **Erros do tipo "Target of URI doesn't exist" no VS Code:** A IDE pode estar abrindo a raiz do repositório. Abra especificamente o diretório `frontend/`, que contém o arquivo `pubspec.yaml`.
+* **Emulador não listado ao executar `flutter devices`:** Inicie um emulador através do Device Manager no Android Studio ou conecte um dispositivo físico garantindo que a depuração USB esteja ativada.
+* **Falha de compilação com erro do Gradle:** Limpe os arquivos temporários do Android executando `cd android && ./gradlew clean && cd .. && flutter run`.
 
 ---
 
-## Banco de dados
+## Banco de Dados (SQLite)
 
-### Scripts
+Os scripts iniciais estruturam a base do sistema local da aplicação.
 
-| Arquivo | Descrição |
-|---|---|
-| `database/init_sqlite.sql` | Criação do schema com as tabelas `users`, `profiles` e `favorites` |
-| `database/seed_sqlite.sql` | Inserts iniciais para desenvolvimento e teste |
-
-### Como executar
+### Instruções de Execução
 
 ```bash
+# A partir do diretório raiz do projeto
 sqlite3 app.db < database/init_sqlite.sql
 sqlite3 app.db < database/seed_sqlite.sql
+
 ```
 
-### Schema
+Este procedimento cria o banco de dados com a estrutura base e insere os dados de exemplo necessários para o ambiente de desenvolvimento.
 
-**users**
+### Scripts de Banco de Dados
 
-| Coluna | Tipo | Descrição |
-|---|---|---|
-| `id` | INTEGER | Chave primária |
-| `username` | TEXT | Nome de usuário |
-| `email` | TEXT | Único |
-| `password_hash` | TEXT | Senha armazenada como hash |
-| `created_at` | DATETIME | — |
+| Arquivo | Finalidade |
+| --- | --- |
+| `database/init_sqlite.sql` | Estruturação do schema e criação das tabelas `users`, `profiles` e `favorites`. |
+| `database/seed_sqlite.sql` | Inserção de dados iniciais para validação de fluxos de cadastro, autenticação e listagens. |
 
-**profiles**
+### Schema Relacional
 
-| Coluna | Tipo | Descrição |
-|---|---|---|
-| `id` | INTEGER | Chave primária |
-| `user_id` | INTEGER | Referência para `users.id` |
-| `name` | TEXT | Nome do perfil |
-| `avatar_url` | TEXT | — |
-| `created_at` | DATETIME | — |
-
-**favorites**
+**Tabela: `users**`
 
 | Coluna | Tipo | Descrição |
-|---|---|---|
+| --- | --- | --- |
 | `id` | INTEGER | Chave primária |
-| `profile_id` | INTEGER | Referência para `profiles.id` |
-| `movie_id` | TEXT | — |
-| `movie_title` | TEXT | — |
-| `added_at` | DATETIME | — |
+| `username` | TEXT | Nome de registro do usuário |
+| `email` | TEXT | Identificador único |
+| `password_hash` | TEXT | Credencial criptografada |
+| `created_at` | DATETIME | Data de registro |
 
-### Observações
+**Tabela: `profiles**`
 
-- O login utiliza `email` e senha armazenada como hash.
-- Cada conta pode ter múltiplos perfis, seguindo o modelo Netflix.
-- Os favoritos são vinculados ao perfil, não à conta, permitindo listas independentes por perfil.
+| Coluna | Tipo | Descrição |
+| --- | --- | --- |
+| `id` | INTEGER | Chave primária |
+| `user_id` | INTEGER | Chave estrangeira (Referência: `users.id`) |
+| `name` | TEXT | Nome de exibição do perfil |
+| `avatar_url` | TEXT | Endereço da imagem do avatar |
+| `created_at` | DATETIME | Data de criação |
 
----
+**Tabela: `favorites**`
 
-## Contribuindo
+| Coluna | Tipo | Descrição |
+| --- | --- | --- |
+| `id` | INTEGER | Chave primária |
+| `profile_id` | INTEGER | Chave estrangeira (Referência: `profiles.id`) |
+| `movie_id` | TEXT | Identificador interno da mídia |
+| `movie_title` | TEXT | Título da mídia favoritada |
+| `added_at` | DATETIME | Data de inserção na lista |
 
-```bash
-# Crie uma branch a partir de front
-git checkout front
-git checkout -b feat/nome-da-feature
+### Regras de Negócio Estabelecidas
 
-# Após as alterações, verifique se não há erros
-flutter analyze
+1. A autenticação do sistema exige estritamente `email` e `senha` (esta última validada via hash).
+2. O `username` é capturado e fixado no momento do cadastro inicial.
+3. A arquitetura de contas suporta múltiplos perfis vinculados a um único usuário raiz.
+4. As listas de favoritos mantêm relação de dependência com a tabela `profiles`, garantindo isolamento de dados entre os diferentes usuários de uma mesma conta.
 
-# Envie e abra um Pull Request para a branch front
-git push origin feat/nome-da-feature
 ```
+
 ```
