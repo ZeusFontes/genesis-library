@@ -1,13 +1,19 @@
 import sqlite3
 import os
+from pathlib import Path
 from dotenv import load_dotenv
 import requests  # <-- Importado para fazer as requisições ao TMDB
 from fastapi import FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, EmailStr
 from backend.app.database import init_db, get_db_connection
+from backend.app.books import router as books_router
 
-load_dotenv(dotenv_path="../../.env")
+base_dir = Path(__file__).resolve().parent
+dotenv_path = base_dir / ".env"
+if not dotenv_path.exists():
+    dotenv_path = base_dir.parent.parent / ".env"
+load_dotenv(dotenv_path=dotenv_path)
 
 app = FastAPI(title="Genesis Library API")
 
@@ -18,6 +24,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.include_router(books_router)
 
 @app.on_event("startup")
 def startup_event():

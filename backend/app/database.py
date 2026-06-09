@@ -1,7 +1,14 @@
 import sqlite3
 import os
+from pathlib import Path
 
-DB_PATH = "../database/app.db"
+
+# Esse comando descobre a pasta raiz 'genesis-library' de forma absoluta,
+# subindo 3 níveis a partir deste arquivo (database.py -> app -> backend -> raiz)
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
+
+# Define o caminho exato apontando para a pasta 'database' na raiz
+DB_PATH = os.path.join(BASE_DIR, "database", "app.db")
 INIT_SQL = "../database/init_sqlite.sql"
 SEED_SQL = "../database/seed_sqlite.sql"
 
