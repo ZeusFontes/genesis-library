@@ -1,9 +1,9 @@
 import sqlite3
 import os
 
-DB_PATH = "backend/database/library.db"
-INIT_SQL = "backend/database/init_sqlite.sql"
-SEED_SQL = "backend/database/seed_sqlite.sql"
+DB_PATH = "../database/app.db"
+INIT_SQL = "../database/init_sqlite.sql"
+SEED_SQL = "../database/seed_sqlite.sql"
 
 def get_db_connection():
     """Cria uma conexão com o banco de dados SQLite."""

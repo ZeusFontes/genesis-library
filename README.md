@@ -153,8 +153,8 @@ Este procedimento cria o banco de dados com a estrutura base e insere os dados d
 
 | Arquivo | Finalidade |
 | --- | --- |
-| `database/init_sqlite.sql` | Estruturação do schema e criação das tabelas `users`, `profiles` e `favorites`. |
-| `database/seed_sqlite.sql` | Inserção de dados iniciais para validação de fluxos de cadastro, autenticação e listagens. |
+| `database/init_sqlite.sql` | Estruturação do schema e criação das tabelas `users`, `profiles`, `favorites`, `addons`, `profile_addons` e `addon_catalogs`. |
+| `database/seed_sqlite.sql` | Inserção de dados iniciais para validação de fluxos de cadastro, autenticação, listagens e addons. |
 
 ### Schema Relacional
 
@@ -188,12 +188,45 @@ Este procedimento cria o banco de dados com a estrutura base e insere os dados d
 | `movie_title` | TEXT | Título da mídia favoritada |
 | `added_at` | DATETIME | Data de inserção na lista |
 
+**Tabela: `addons`**
+
+| Coluna | Tipo | Descrição |
+| --- | --- | --- |
+| `id` | INTEGER | Chave primária |
+| `manifest_url` | TEXT | URL do manifesto JSON do addon (único) |
+| `transport_url` | TEXT | Endpoint base para requisições ao addon |
+| `name` | TEXT | Nome de exibição do addon |
+| `description` | TEXT | Descrição do addon |
+| `version` | TEXT | Versão do addon |
+| `created_at` | DATETIME | Data de registro |
+
+**Tabela: `profile_addons`**
+
+| Coluna | Tipo | Descrição |
+| --- | --- | --- |
+| `id` | INTEGER | Chave primária |
+| `profile_id` | INTEGER | Chave estrangeira (Referência: `profiles.id`) |
+| `addon_id` | INTEGER | Chave estrangeira (Referência: `addons.id`) |
+| `installed_at` | DATETIME | Data de instalação do addon no perfil |
+
+**Tabela: `addon_catalogs`**
+
+| Coluna | Tipo | Descrição |
+| --- | --- | --- |
+| `id` | INTEGER | Chave primária |
+| `addon_id` | INTEGER | Chave estrangeira (Referência: `addons.id`) |
+| `type` | TEXT | Tipo de conteúdo (`movie`, `series`, `anime`) |
+| `catalog_id` | TEXT | Identificador interno do catálogo no addon |
+| `name` | TEXT | Nome de exibição do catálogo |
+
 ### Regras de Negócio Estabelecidas
 
 1. A autenticação do sistema exige estritamente `email` e `senha` (esta última validada via hash).
 2. O `username` é capturado e fixado no momento do cadastro inicial.
 3. A arquitetura de contas suporta múltiplos perfis vinculados a um único usuário raiz.
 4. As listas de favoritos mantêm relação de dependência com a tabela `profiles`, garantindo isolamento de dados entre os diferentes usuários de uma mesma conta.
+5. Cada perfil possui sua própria lista de addons instalados, permitindo configurações independentes por perfil (ex: perfil infantil com addons diferentes do perfil adulto).
+6. Os catálogos disponíveis em cada addon são armazenados localmente na tabela `addon_catalogs`, evitando consultas repetidas ao manifesto remoto.
 
 ```
 
