@@ -1,0 +1,34 @@
+import sqlite3
+import os
+
+DB_PATH = "backend/database/library.db"
+INIT_SQL = "backend/database/init_sqlite.sql"
+SEED_SQL = "backend/database/seed_sqlite.sql"
+
+def get_db_connection():
+    """Cria uma conexão com o banco de dados SQLite."""
+    conn = sqlite3.connect(DB_PATH)
+    # Permite acessar as colunas pelos nomes (ex: linha['titulo']) em vez de índices (linha[0])
+    conn.row_factory = sqlite3.Row
+    return conn
+
+def init_db():
+    """Cria as tabelas e popula o banco caso o arquivo .db não exista."""
+    if not os.path.exists(DB_PATH):
+        print("Banco de dados não encontrado. Inicializando...")
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
+        # Executa o script de criação de tabelas
+        if os.path.exists(INIT_SQL):
+            with open(INIT_SQL, 'r', encoding='utf-8') as f:
+                cursor.executescript(f.read())
+        
+        # Executa o script de sementes (dados iniciais), se houver
+        if os.path.exists(SEED_SQL):
+            with open(SEED_SQL, 'r', encoding='utf-8') as f:
+                cursor.executescript(f.read())
+                
+        conn.commit()
+        conn.close()
+        print("Banco de dados inicializado com sucesso!")
