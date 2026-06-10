@@ -6,8 +6,12 @@ import requests  # <-- Importado para fazer as requisições ao TMDB
 from fastapi import FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, EmailStr
+
+# --- IMPORTS DO NOSSO SISTEMA E DO SISTEMA DE LIVROS ---
 from backend.app.database import init_db, get_db_connection
 from backend.app.books import router as books_router
+from backend.app.addons import AddonInstallRequest, db_install_addon, db_list_profile_addons
+from backend.app.favorites import FavoriteCreate, db_list_favorites, db_add_favorite, db_remove_favorite
 
 base_dir = Path(__file__).resolve().parent
 dotenv_path = base_dir / ".env"
@@ -25,6 +29,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Roteador de livros do Internet Archive (Desenvolvido pelo seu amigo)
 app.include_router(books_router)
 
 @app.on_event("startup")
@@ -48,11 +53,6 @@ class ProfileCreate(BaseModel):
     user_id: int
     name: str
     avatar_url: str = None
-
-class FavoriteCreate(BaseModel):
-    profile_id: int
-    movie_id: str  # Guardando como TEXT conforme o SQL
-    movie_title: str = None
 
 
 # -----------------------------------------------------------------------------
@@ -108,51 +108,19 @@ def criar_perfil(profile: ProfileCreate):
 
 
 # -----------------------------------------------------------------------------
-# ROTAS DE FAVORITOS 
+# ROTAS DE FAVORITOS (Consumindo a lógica isolada do arquivo favorites.py)
 # -----------------------------------------------------------------------------
 @app.get("/api/v1/profiles/{profile_id}/favorites")
 def listar_favoritos_do_perfil(profile_id: int):
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM favorites WHERE profile_id = ?;", (profile_id,))
-    favoritos = cursor.fetchall()
-    conn.close()
-    return [dict(favorito) for favorito in favoritos]
+    return db_list_favorites(profile_id)
 
 @app.post("/api/v1/favorites", status_code=status.HTTP_201_CREATED)
 def adicionar_favorito(fav: FavoriteCreate):
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    try:
-        cursor.execute(
-            "INSERT INTO favorites (profile_id, movie_id, movie_title) VALUES (?, ?, ?);",
-            (fav.profile_id, fav.movie_id, fav.movie_title)
-        )
-        conn.commit()
-        return {"message": "Adicionado aos favoritos com sucesso"}
-    except sqlite3.IntegrityError:
-        raise HTTPException(status_code=400, detail="Este título já está nos favoritos deste perfil.")
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-    finally:
-        conn.close()
+    return db_add_favorite(fav)
 
 @app.delete("/api/v1/profiles/{profile_id}/favorites/{movie_id}")
 def remover_favorito(profile_id: int, movie_id: str):
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    cursor.execute(
-        "DELETE FROM favorites WHERE profile_id = ? AND movie_id = ?;",
-        (profile_id, movie_id)
-    )
-    conn.commit()
-    colunas_afetadas = cursor.rowcount
-    conn.close()
-    
-    if colunas_afetadas == 0:
-        raise HTTPException(status_code=404, detail="Favorito não encontrado.")
-    
-    return {"message": "Removido dos favoritos com sucesso"}
+    return db_remove_favorite(profile_id, movie_id)
 
 
 # -----------------------------------------------------------------------------
@@ -264,3 +232,15 @@ def buscar_filmes(query: str):
 
     except requests.exceptions.RequestException as e:
         raise HTTPException(status_code=500, detail=f"Erro de conexão com o provedor: {str(e)}")
+
+
+# -----------------------------------------------------------------------------
+# ROTAS DOS ADDONS (Instalação e Listagem de Addons por Perfil)
+# -----------------------------------------------------------------------------
+@app.post("/api/v1/addons/install", status_code=status.HTTP_201_CREATED)
+def install_addon(data: AddonInstallRequest):
+    return db_install_addon(data)
+
+@app.get("/api/v1/profiles/{profile_id}/addons")
+def list_profile_addons(profile_id: int):
+    return db_list_profile_addons(profile_id)

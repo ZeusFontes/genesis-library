@@ -10,7 +10,7 @@ from backend.app.database import get_db_connection
 router = APIRouter(prefix="/api/v1/books", tags=["books"])
 
 BOOKS_API_URL = "https://www.googleapis.com/books/v1/volumes"
-GOOGLE_BOOKS_API_KEY = "lala"
+GOOGLE_BOOKS_API_KEY = "la la"
 
 
 @router.get("/search")
