@@ -1,4 +1,4 @@
-# GÊNESIS
+# GÊNESIS LIBRARY
 
 > Catálogo inteligente de filmes, séries e livros para mobile. Otimiza a descoberta de conteúdo com redirecionamento para streamings oficiais e player integrado para obras de domínio público. Desenvolvido com foco em UX e alta performance.
 
@@ -15,6 +15,7 @@
 - [Equipe](#equipe)
 - [Tecnologias](#tecnologias)
 - [Estrutura do Repositório](#estrutura-do-repositório)
+- [Guia de Execução Local](#guia-de-execução-local)
 - [Frontend (Flutter)](#frontend-flutter)
 - [Banco de Dados (SQLite)](#banco-de-dados-sqlite)
 
@@ -42,6 +43,7 @@ O GÊNESIS é uma plataforma mobile que centraliza a descoberta de filmes, séri
 | Camada | Tecnologia |
 |---|---|
 | Frontend | Flutter / Dart |
+| Backend | Python / FastAPI |
 | Banco de dados local | SQLite |
 
 ---
@@ -50,10 +52,75 @@ O GÊNESIS é uma plataforma mobile que centraliza a descoberta de filmes, séri
 
 ```text
 genesis-library/
-├── frontend/        → Aplicativo Flutter (mobile Android)
+├── frontend/        → Aplicativo Flutter (Mobile e Web)
+├── backend/         → API REST (Python/FastAPI)
 └── database/        → Scripts SQL do banco de dados local
 
 ```
+
+---
+
+## Guia de Execução Local
+
+⚠️ **Aviso Importante sobre o fluxo de inicialização:** Para que a API e a interface funcionem corretamente em conjunto sem travar os processos locais, é fundamental **seguir a ordem exata dos passos abaixo**.
+
+### ⚙️ Passo 1: Preparando o Frontend (Primeira Etapa)
+
+Antes de iniciar qualquer servidor, precisamos preparar os arquivos base do Flutter. Abra o terminal na pasta raiz do projeto e execute:
+
+```powershell
+# 1. Navegue até a pasta do frontend:
+cd frontend
+
+# 2. Garanta que o suporte web está configurado:
+flutter create . --platforms web
+
+# 3. Baixe e atualize as dependências do Flutter:
+flutter pub get
+
+```
+
+### 🛑 Passo 2: REINICIE O SEU EDITOR (VS CODE)
+
+**ATENÇÃO:** É obrigatório reiniciar o seu editor de código neste momento. Extensões do Flutter/Dart podem "segurar" processos em segundo plano. Feche o VS Code completamente e abra a pasta raiz do projeto novamente. **Se este passo for ignorado, o backend não conseguirá ser iniciado corretamente no próximo passo.**
+
+### ⚙️ Passo 3: Configurando e Rodando o Backend (API)
+
+Com o VS Code reaberto, abra um **novo terminal** na pasta raiz do projeto e siga os passos abaixo para iniciar o servidor:
+
+```powershell
+# 1. Crie o ambiente virtual (caso ainda não exista):
+python -m venv .venv
+
+# 2. Ative o ambiente virtual no PowerShell (Windows):
+.\.venv\Scripts\Activate.ps1
+# (Nota: Se houver um erro vermelho de permissão, execute `Set-ExecutionPolicy Unrestricted -Scope Process` e tente novamente).
+
+# 3. Navegue até a pasta do backend e instale as dependências:
+cd backend
+pip install -r requirements.txt
+
+# 4. Inicie o servidor da API:
+python -m uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
+
+```
+
+✅ A API estará rodando em `http://127.0.0.1:8000`. **Deixe este terminal aberto e rodando.**
+
+### 💻 Passo 4: Rodando o Frontend (Web)
+
+Agora vamos iniciar a interface. Abra um **segundo terminal** (mantendo o terminal do backend rodando no fundo) e siga os passos:
+
+```powershell
+# 1. Navegue até a pasta do frontend:
+cd frontend
+
+# 2. Inicie a aplicação web (modo profile recomendado para testar performance):
+flutter run -d web-server --web-port 8080 --profile
+
+```
+
+✅ **Pronto!** O frontend estará rodando e acessível através do seu navegador, já conectado com o backend.
 
 ---
 
@@ -68,26 +135,7 @@ genesis-library/
 | Android Studio / VS Code | — | Com extensão Flutter instalada |
 | Dispositivo ou emulador | API 21+ | Android |
 
-### Instalação e Execução
-
-Antes de iniciar, certifique-se de que o ambiente está configurado executando `flutter doctor`.
-
-```bash
-# Acesse o diretório do frontend
-cd genesis-library/frontend
-
-# Instale as dependências do projeto
-flutter pub get
-
-# Liste os dispositivos disponíveis
-flutter devices
-
-# Execute a aplicação em modo debug
-flutter run
-
-```
-
-### Comandos de Build
+### Comandos de Build (Mobile)
 
 ```bash
 # Gerar APK em modo debug
@@ -130,7 +178,7 @@ O arquivo APK gerado será alocado no diretório: `build/app/outputs/flutter-apk
 
 * **Erros do tipo "Target of URI doesn't exist" no VS Code:** A IDE pode estar abrindo a raiz do repositório. Abra especificamente o diretório `frontend/`, que contém o arquivo `pubspec.yaml`.
 * **Emulador não listado ao executar `flutter devices`:** Inicie um emulador através do Device Manager no Android Studio ou conecte um dispositivo físico garantindo que a depuração USB esteja ativada.
-* **Falha de compilação com erro do Gradle:** Limpe os arquivos temporários do Android executando `cd android && ./gradlew clean && cd .. && flutter run`.
+* **Falha de compilação com erro do Gradle (Mobile):** Limpe os arquivos temporários do Android executando `cd android && ./gradlew clean && cd .. && flutter run`.
 
 ---
 
@@ -188,7 +236,7 @@ Este procedimento cria o banco de dados com a estrutura base e insere os dados d
 | `movie_title` | TEXT | Título da mídia favoritada |
 | `added_at` | DATETIME | Data de inserção na lista |
 
-**Tabela: `addons`**
+**Tabela: `addons**`
 
 | Coluna | Tipo | Descrição |
 | --- | --- | --- |
@@ -200,7 +248,7 @@ Este procedimento cria o banco de dados com a estrutura base e insere os dados d
 | `version` | TEXT | Versão do addon |
 | `created_at` | DATETIME | Data de registro |
 
-**Tabela: `profile_addons`**
+**Tabela: `profile_addons**`
 
 | Coluna | Tipo | Descrição |
 | --- | --- | --- |
@@ -209,7 +257,7 @@ Este procedimento cria o banco de dados com a estrutura base e insere os dados d
 | `addon_id` | INTEGER | Chave estrangeira (Referência: `addons.id`) |
 | `installed_at` | DATETIME | Data de instalação do addon no perfil |
 
-**Tabela: `addon_catalogs`**
+**Tabela: `addon_catalogs**`
 
 | Coluna | Tipo | Descrição |
 | --- | --- | --- |
